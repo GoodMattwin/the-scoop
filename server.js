@@ -359,6 +359,28 @@ function downvoteComment(url, request) {
 
   return response;
 }
+
+function loadDatabase() {
+  const yamlFile = './scoop.yml';
+  /* There seemed to be countless solutions on how to check if a file exists,
+  so I chose 'fs-exists-sync' and it worked. I decided to use it even though I'm also
+  including 'fs' below because it worked and that was good enough for me at the time :) */
+  const exists = require('fs-exists-sync');
+  const yaml = require('js-yaml');
+  const fs   = require('fs');
+  if (exists(yamlFile)) {
+    database = yaml.safeLoad(fs.readFileSync(yamlFile, 'utf8'));
+  }
+}
+
+function saveDatabase() {
+  const writeYaml = require('write-yaml');
+  const data = database;
+  writeYaml('./scoop.yml', data, function(err) {
+    if (err) console.log(err);
+  });
+}
+
 // Write all code above this line.
 
 const http = require('http');
